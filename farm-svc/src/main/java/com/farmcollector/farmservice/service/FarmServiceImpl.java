@@ -85,6 +85,7 @@ public class FarmServiceImpl implements FarmService{
     @Override
     public Farm updateHarvested(Farm farm) {
         // Retrieve the existing Farm entity
+        //TODO add custom exception and exception handler
         Farm existingfarm = farmRepository.findByNameAndFieldNameAndCropNameAndSeasonName(farm.getName(), farm.getField().getName(), farm.getCrop().getName(), farm.getSeason().getName())
                 .orElseThrow(() -> new IllegalArgumentException("Farm not found for the specified parameters"));
 
