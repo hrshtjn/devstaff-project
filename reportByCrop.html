@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Reports</title>
+</head>
+<body>
+    <h1>Farm Reports</h1>
+
+    <div id="reportContainer">
+        <!-- Reports will be displayed here -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cropName = 'Corn'; // Replace with the crop name you want to query
+            const seasonName = 'Spring2023'; // Replace with the season name you want to query
+            const apiUrl = `http://localhost:8080/api/reports/crop?cropName=${cropName}&seasonName=${seasonName}`;
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Process the data and display reports
+                    const reportContainer = document.getElementById('reportContainer');
+                    reportContainer.innerHTML = ''; // Clear previous content
+
+                    // Create and append report items
+                    data.forEach(report => {
+                        const reportItem = document.createElement('div');
+                        reportItem.innerHTML = `
+                            <p><strong>Farm Name:</strong> ${report.farmName}</p>
+                            <p><strong>Crop Name:</strong> ${report.cropType}</p>
+                            <p><strong>Expected Product:</strong> ${report.expectedProduct}</p>
+                            <p><strong>Actual Product:</strong> ${report.actualProduct}</p>
+                            <hr>
+                        `;
+                        reportContainer.appendChild(reportItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    const reportContainer = document.getElementById('reportContainer');
+                    reportContainer.innerHTML = `<p>Error fetching data: ${error.message}</p>`;
+                });
+        });
+    </script>
+</body>
+</html>

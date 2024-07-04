@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Report</title>
+</head>
+<body>
+    <h1>Farm Report (MyFarm - Spring2023)</h1>
+
+    <div id="farmReportContainer">
+        <!-- Farm reports will be displayed here -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const farmName = 'MyFarm'; // Replace with the farm name you want to query
+            const seasonNameFarm = 'Spring2023'; // Replace with the season name you want to query
+            const farmApiUrl = `http://localhost:8080/api/reports/farm?name=${farmName}&seasonName=${seasonNameFarm}`;
+
+            fetch(farmApiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Process the data and display farm reports
+                    const farmReportContainer = document.getElementById('farmReportContainer');
+                    farmReportContainer.innerHTML = ''; // Clear previous content
+
+                    // Create and append farm report items
+                    data.forEach(report => {
+                        const reportItem = document.createElement('div');
+                        reportItem.innerHTML = `
+                            <p><strong>Farm Name:</strong> ${report.farmName}</p>
+                            <p><strong>Field Name:</strong> ${report.fieldName}</p>
+                            <p><strong>Season:</strong> ${report.season}</p>
+                            <p><strong>Crop Type:</strong> ${report.cropType}</p>
+                            <p><strong>Expected Product:</strong> ${report.expectedProduct}</p>
+                            <p><strong>Actual Product:</strong> ${report.actualProduct}</p>
+                            <hr>
+                        `;
+                        farmReportContainer.appendChild(reportItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching farm report:', error);
+                    const farmReportContainer = document.getElementById('farmReportContainer');
+                    farmReportContainer.innerHTML = `<p>Error fetching farm report: ${error.message}</p>`;
+                });
+        });
+    </script>
+</body>
+</html>
